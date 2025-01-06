@@ -28,6 +28,16 @@ class ApiClient
 
     public function createSendRequestForMessage(Message $message, bool $validateOnly): RequestInterface
     {
+        $protocolVersion = '1.1';
+        if (defined('CURL_VERSION_HTTP2')) {
+            try {
+                $curlInfo = curl_version();
+                $supportsHttp2 = ($curlInfo['features'] & CURL_VERSION_HTTP2) !== 0;
+                $protocolVersion = $supportsHttp2 ? '2.0' : '1.1';
+            } catch (\Exception $exception) {
+                $protocolVersion = '1.1';
+            }
+        }
         $request = $this->requestFactory
             ->createRequest(
                 'POST',
@@ -44,7 +54,7 @@ class ApiClient
         $body = $this->streamFactory->createStream(Json::encode($payload));
 
         return $request
-            ->withProtocolVersion('2.0')
+            ->withProtocolVersion($protocolVersion)
             ->withBody($body)
             ->withHeader('Content-Type', 'application/json; charset=UTF-8')
             ->withHeader('Content-Length', (string) $body->getSize())
