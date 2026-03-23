@@ -1,15 +1,43 @@
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 
 updates:
+  # =====================================
+  # Laravel (Composer)
+  # =====================================
+  - package-ecosystem: "composer"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Tokyo"
+    open-pull-requests-limit: 5
+    groups:
+      composer-all:
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+      - "php"
+      - "laravel"
+    ignore:
+      # Laravel メジャーアップデート防止（例: 10 → 11）
+      - dependency-name: "laravel/framework"
+        update-types: ["version-update:semver-major"]
+  # =====================================
+  # GitHub Actions
+  # =====================================
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
-    commit-message:
-      include: "scope"
-      prefix: "github-actions"
-    open-pull-requests-limit: 10
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+      timezone: "Asia/Tokyo"
+    groups:
+      actions:
+        patterns:
+          - "*"
     labels:
-      - "dependency"
+      - "dependencies"
+      - "ci"
