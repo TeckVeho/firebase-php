@@ -1,9 +1,6 @@
 version: 2
 
 updates:
-  # =====================================
-  # Laravel (Composer)
-  # =====================================
   - package-ecosystem: "composer"
     directory: "/"
     schedule:
@@ -11,33 +8,56 @@ updates:
       day: "monday"
       time: "04:00"
       timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
     groups:
-      composer-all:
+      composer-root-production-major:
+        dependency-type: "production"
         patterns:
           - "*"
-    labels:
-      - "dependencies"
-      - "php"
-      - "laravel"
-    ignore:
-      # Laravel メジャーアップデート防止（例: 10 → 11）
-      - dependency-name: "laravel/framework"
-        update-types: ["version-update:semver-major"]
-  # =====================================
-  # GitHub Actions
-  # =====================================
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "04:00"
-      timezone: "Asia/Tokyo"
-    groups:
-      actions:
+        exclude-patterns:
+          - "laravel/framework"
+        update-types:
+          - "major"
+      composer-root-development-major:
+        dependency-type: "development"
         patterns:
           - "*"
+        exclude-patterns:
+          - "laravel/framework"
+        update-types:
+          - "major"
+      composer-root-production-minor:
+        dependency-type: "production"
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "laravel/framework"
+        update-types:
+          - "minor"
+      composer-root-development-minor:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "laravel/framework"
+        update-types:
+          - "minor"
+      composer-root-production-patch:
+        dependency-type: "production"
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "laravel/framework"
+        update-types:
+          - "patch"
+      composer-root-development-patch:
+        dependency-type: "development"
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "laravel/framework"
+        update-types:
+          - "patch"
     labels:
       - "dependencies"
-      - "ci"
+      - "composer"
+      - "backend"
